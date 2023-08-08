@@ -1,6 +1,8 @@
 const NewPost = ({
-    handleSubmit, postTitle, setPostTitle, postBody, setPostBody
+    handleSubmit, postTitle, setPostTitle, postBody, setPostBody, selectedImage, handleImageChange
 }) => {
+    
+    
     return (
         <main className="NewPost">
             <h2>New Post</h2>
@@ -20,6 +22,14 @@ const NewPost = ({
                     value={postBody}
                     onChange={(e) => setPostBody(e.target.value)}
                 />
+                <label htmlFor="imageInput">Image:</label>
+                <input
+                    id="imageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                />
+               {selectedImage && <img src={selectedImage} alt="Selected" />}
                 <button type="submit">Submit</button>
             </form>
         </main>

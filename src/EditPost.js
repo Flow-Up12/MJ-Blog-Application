@@ -16,7 +16,7 @@ const EditPost = ({
 
     return (
         <main className="NewPost">
-            {editTitle &&
+            {post &&
                 <>
                     <h2>Edit Post</h2>
                     <form className="newPostForm" onSubmit={(e) => e.preventDefault()}>
@@ -39,7 +39,7 @@ const EditPost = ({
                     </form>
                 </>
             }
-            {!editTitle &&
+            {!post &&
                 <>
                     <h2>Post Not Found</h2>
                     <p>Well, that's disappointing.</p>

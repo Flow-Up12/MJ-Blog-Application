@@ -14,12 +14,15 @@ import { format } from 'date-fns';
 import { auth, database } from './data/FireBase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { getDocs, addDoc, collection, query, where, updateDoc, doc, deleteDoc} from 'firebase/firestore';
+import { getDocs, addDoc, collection, query, where, updateDoc, deleteDoc} from 'firebase/firestore';
+import { storage } from './data/FireBase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+//unique ids
+import { v4 as uuidv4 } from 'uuid';
 
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([])
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [postTitle, setPostTitle] = useState('');
@@ -34,6 +37,7 @@ function App() {
   const [myPost, setMyPost] = useState([]);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState('');
 
 
   
@@ -57,17 +61,6 @@ function App() {
  
   
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userCollection = collection(database, 'users');
-      const querySnapshot = await getDocs(userCollection);
-
-      const fetchUserDatas = [];
-      querySnapshot.forEach((doc) => {
-        fetchUserDatas.push(doc.data().username);
-      });
-
-      setUsers(fetchUserDatas);
-    };
 
     const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
     if (storedIsLoggedIn === 'true') {
@@ -80,7 +73,6 @@ function App() {
     const timeout = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
-    fetchUserData();
     return () => clearTimeout(timeout); // Cleanup the timeout on component unmount
   }, []);
   
@@ -110,9 +102,9 @@ function App() {
   const handleSubmit = async(e) => {
     e.preventDefault();
     
-    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const id = uuidv4();
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
-    const newPost = { id, username: usernameInput, title: postTitle, datetime, body: postBody };
+    const newPost = { id, username: usernameInput, title: postTitle, datetime, body: postBody, imageUrl: selectedImage  };
     try {
       const postCollection = collection(database, 'posts');
       await addDoc(postCollection, newPost);
@@ -123,11 +115,16 @@ function App() {
     setPostBody('');
     navigate('/');  
     
+    
     } catch (err) {
       console.log(`Error ${err.message}`);
     }
 
   }
+
+  
+
+
 
   const handleEdit = async (id) => {
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
@@ -140,9 +137,13 @@ function App() {
     };
   
     try {
-      const postCollection = collection(database, 'posts');
-      const postDocRef = doc(postCollection, id);
-      await updateDoc(postDocRef, updatedPost);
+      const querySnapshot = await getDocs(query(collection(database, 'posts'), where('id', '==', id)));
+      
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          await updateDoc(doc.ref, updatedPost); // Use doc.ref to get the document reference
+        });
+      }
   
       setPosts((prevPosts) =>
         prevPosts.map((post) => (post.id === id ? updatedPost : post))
@@ -154,21 +155,44 @@ function App() {
       console.log(`Error: ${err.message}`);
     }
   };
+  const handleImageChange = async (e) => {
+    
+    if (e.target.files.length) {
+      const imageFile = e.target.files[0];
   
+      try {
+        // Upload the image to Firebase Storage
+        const storageRef = ref(storage, `${usernameInput}/` + imageFile.name);
+        await uploadBytes(storageRef, imageFile);
   
-  const handleDelete = async (id) => {  
-    try{
-    const postCollection = collection(database, 'posts');
-    await deleteDoc(doc(postCollection, id));
-
-     setPosts((prevPosts) => prevPosts.filter(post => post.id !== id));
-      navigate('/');
+        // Get the download URL for the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+  
+        setSelectedImage(downloadURL); // Update the selectedImage state
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+  };
+  
+  const handleDelete = async (postId) => {
+    try {
+      const querySnapshot = await getDocs(query(collection(database, 'posts'), where('id', '==', postId)));
+      
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref); // Use doc.ref to get the document reference
+        });
+      }
+      
+      // Update state by removing the deleted post
+      setPosts((prevPosts) => prevPosts.filter(post => post.id !== postId));
+      navigate("/");
     } catch (err) {
       console.log(`Error ${err.message}`);
     }
-   
-  }
-
+  };
+  
   const handleSignOut = (e) => {
     e.preventDefault();
     auth.signOut().then(() => {
@@ -245,7 +269,7 @@ function App() {
             passwordInput={passwordInput}
             setPasswordInput={setPasswordInput}
             setIsSigningUp={setIsSigningUp}
-            user={users}
+           
           />
         )}
       
@@ -277,11 +301,14 @@ function App() {
                 index
                 element={
                   <NewPost
+                    handleImageChange= {handleImageChange}
                     handleSubmit={handleSubmit}
                     postTitle={postTitle}
                     setPostTitle={setPostTitle}
                     postBody={postBody}
                     setPostBody={setPostBody}
+                    setSelectedImage={setSelectedImage}
+                    selectedImage={selectedImage}
                   />
                 }
               />

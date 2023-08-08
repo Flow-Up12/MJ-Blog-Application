@@ -9,6 +9,11 @@ const PostPage = ({ posts, handleDelete, usernameInput}) => {
                 {post &&
                     <>
                         <h2>{post.title}</h2>   
+                        {post.imageUrl && <img src={post.imageUrl} alt="Post" style = {{
+                           maxHeight: 600,
+                            maxWidth:600
+                        }} />} {/* Display the image */}
+
                         <p className="postBody">{post.body}</p>
                         <p className="postDate"> {post.datetime}</p>
                         <p> By : {post.username}</p>
