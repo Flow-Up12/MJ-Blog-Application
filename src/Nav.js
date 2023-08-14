@@ -20,7 +20,11 @@ const Nav = ({ search, setSearch, userImg }) => {
                 <li><Link to="post">Post</Link></li>
                 <li><Link to="settings">Settings</Link></li> 
                 <li><Link to="myPost"> 
-                <img src={userImg} alt='User Icon' height={50}/>
+                <img
+                src={userImg === null ? 'user.png' : userImg}
+                alt='User Icon'
+                height={50}
+                />
                 </Link></li>              
             </ul>
         </nav>
