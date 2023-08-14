@@ -30,7 +30,7 @@ function SignIn({ handleSignIn, emailInput, setEmailInput, passwordInput, setPas
       </form>
       <Link to="/signup" onClick={() => setIsSigningUp(true)}>
   Create an account
-</Link>
+      </Link>
 
     </div>
   );

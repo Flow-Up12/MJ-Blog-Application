@@ -35,9 +35,14 @@ function App() {
   const [passwordInput, setPasswordInput] = useState('');
   const [isLoggedIn , setIsLoggedIn] = useState(false)
   const [myPost, setMyPost] = useState([]);
+  const [user, setUser] = useState([]);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
+  const [userImg, setUserImg] = useState('/user.png');
+  
+
+  
 
 
   
@@ -45,29 +50,75 @@ function App() {
     const fetchPosts = async () => {
       const postCollection = collection(database, 'posts');
       const querySnapshot = await getDocs(postCollection);
-
+      
       const fetchedPosts = [];
       querySnapshot.forEach((doc) => {
         fetchedPosts.push(doc.data());
       });
       setPosts(fetchedPosts);
       console.log(fetchedPosts)
+      
+    
     };
 
     fetchPosts();
     
   }, []);
 
- 
-  
   useEffect(() => {
 
+    if (isLoggedIn) {
+      const fetchUser = async () => {
+        try {
+          const querySnapshot = await getDocs(
+            query(collection(database, 'usernames'), where('username', '==', usernameInput))
+          );
+  
+          if (!querySnapshot.empty) {
+            // Since there could be multiple matching documents, let's consider the first one
+            const doc = querySnapshot.docs[0];
+            const userData = doc.data();
+            setUser(userData);
+            if (userData.profileImg != null) {
+              setUserImg(userData.profileImg)
+              localStorage.setItem('userimg', userData.profileImg);
+            }
+            else {
+              localStorage.setItem('userimg', 'user.png');
+            }
+            
+            console.log(userData);
+          }
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      };
+  
+      fetchUser();
+    }
+    
+  }, [usernameInput, isLoggedIn]);
+ 
+  
+  useEffect(()  => {
+    
     const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
     if (storedIsLoggedIn === 'true') {
       setIsLoggedIn(true);
       const storedUsername = localStorage.getItem('username');
       setUsernameInput(storedUsername);
-    }
+      const StoredUserImg = localStorage.getItem('userimg');
+      if (StoredUserImg != null) {
+        setUserImg(StoredUserImg);
+      }
+     
+       
+      
+  }
+
+
+
+    
 
     // Simulate a 2-second timeout before setting isLoading to false
     const timeout = setTimeout(() => {
@@ -122,7 +173,24 @@ function App() {
 
   }
 
+  const handleProfileImgSubmit = async (e) => {
+    e.preventDefault();
   
+    try {
+      const querySnapshot = await getDocs(query(collection(database, 'usernames'), where('username', '==', usernameInput)));
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+          const userRef = doc.ref;
+          
+          // Update the 'profileImg' field in the user document
+          await updateDoc(userRef, { profileImg: userImg });
+          alert("user img changed");
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
 
 
@@ -174,6 +242,26 @@ function App() {
       }
     }
   };
+  const handleUserImg = async (e) => {
+    
+    if (e.target.files.length) {
+      const imageFile = e.target.files[0];
+  
+      try {
+        // Upload the image to Firebase Storage
+        const storageRef = ref(storage, `${usernameInput}/` + imageFile.name);
+        await uploadBytes(storageRef, imageFile);
+  
+        // Get the download URL for the uploaded image
+        const downloadURL = await getDownloadURL(storageRef);
+  
+        setUserImg(downloadURL); // Update the selectedImage state
+        localStorage.setItem('userimg', downloadURL);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+  };
   
   const handleDelete = async (postId) => {
     try {
@@ -200,6 +288,9 @@ function App() {
       setEmailInput('');
       setUsernameInput('');
       setPasswordInput('');
+      setUserImg('');
+      localStorage.setItem('username', '');
+      localStorage.setItem('userimg', '');
       alert("You were signed out.");
     });
   };
@@ -212,14 +303,17 @@ function App() {
       const querySnapshot = await getDocs(query(collection(database, 'usernames'), where('userId', '==',auth.currentUser.uid)));
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc) => {
-          setUsernameInput(doc.data().username);
+          const userData = doc.data();
+          console.log('User Data:', userData);
+          setUsernameInput(userData.username);
+          setUser({userData});
         });
       }
-  
+      console.log(user);
       setIsLoggedIn(true);
       setPasswordInput('');
+     
       navigate("/");
-      console.log(usernameInput)
     } catch (error) {
       alert("Invalid username or password. Please try again.");
       console.log(error.message);
@@ -245,9 +339,10 @@ function App() {
           username: usernameInput,
         };
         await addDoc(userCollection, newUser);
-  
+        setUser({newUser});
         setIsSigningUp(false);
         setIsLoggedIn(true);
+        
         alert("You were signed up.");
         navigate('/');
       }
@@ -291,7 +386,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} />}
+            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg}/>}
           >
             <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
             <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} />} />
@@ -331,7 +426,7 @@ function App() {
               />
             </Route>
 
-            <Route path="settings" element={<Settings handleSignOut={handleSignOut} />} />
+            <Route path="settings" element={<Settings handleSignOut={handleSignOut} handleUserImg={handleUserImg} handleProfileImgSubmit={handleProfileImgSubmit}/>} />
 
             <Route path="*" element={<Missing />} />
           </Route>

@@ -41,7 +41,6 @@ body {
 .Header, .Footer {
   width: 100%;
   background-color: #66d8f5;
-  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,11 +48,11 @@ body {
 }
 
 .Header h1 {
-  font-size: 1.5rem;
+  font-size: 10px;
 }
 
 .Header svg {
-  font-size: 2rem;
+  font-size: 10px;
 }
 
 .Footer {
@@ -73,7 +72,7 @@ body {
 
 .searchForm {
   width: 80%;
-  padding: 1rem 0 0 0.75rem;
+  
 }
 
 .searchForm input[type="text"] {
@@ -264,7 +263,7 @@ body {
   }
 
   .Header h1 {
-    font-size: 2rem;
+    font-size: 30px;
   }
 
   .Nav {
@@ -272,6 +271,7 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
+
   }
 
   .Nav ul {
