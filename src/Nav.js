@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Avatar } from '@mui/material';
 
 const Nav = ({ search, setSearch, userImg }) => {
 
@@ -20,7 +21,7 @@ const Nav = ({ search, setSearch, userImg }) => {
                 <li><Link to="post">Post</Link></li>
                 <li><Link to="settings">Settings</Link></li> 
                 <li><Link to="myPost"> 
-                <img
+                <Avatar
                 src={userImg === null ? 'user.png' : userImg}
                 alt='User Icon'
                 height={50}

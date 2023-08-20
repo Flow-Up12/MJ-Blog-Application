@@ -21,6 +21,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
 
+
 function App() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState('');
@@ -389,7 +390,7 @@ function App() {
             element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg}/>}
           >
             <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
-            <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} />} />
+            <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} />} />
 
             <Route path="post">
               <Route
