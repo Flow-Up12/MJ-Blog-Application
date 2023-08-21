@@ -404,5 +404,55 @@ body {
 .SignUp-image {
   width: 50px;
   height: 50px;
+}
+
+.MyPostDisplay {
+  border-bottom: 1px solid black;
+}
+
+.MyPostDisplay-header {
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+}
+
+.MyPostDisplay-header-avatar {
+  margin-right: 20px;
+}
+
+.MyPostDisplay-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.MyPostDisplay-name {
+  margin-top: 10px;
+}
+
+.MyPostDisplay-bio {
+  margin-top: 10px;
+}
+
+.MyPostDisplay-button {
+  font-size: 30px;
+}
+.username {
+  font-size: 30px;
   
+}
+
+@media (max-width: 600px) {
+ 
+  
+  .MyPostDisplay-header {
+    font-size: 20px;
+  }
+  
+  .MyPostDisplay-content {
+    font-size: 14px;
+  }
+  .MyPostDisplay-button {
+    font-size: 30px;
+  }
+
 }
