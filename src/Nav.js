@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Avatar } from '@mui/material';
 
-const Nav = ({ search, setSearch, userImg, setEditingProfile}) => {
+const Nav = ({ search, setSearch, userImg, usernameInput}) => {
 
     
     return (
@@ -23,7 +23,7 @@ const Nav = ({ search, setSearch, userImg, setEditingProfile}) => {
                 <li><Link to="myPost"> 
                 <Avatar
                 src={userImg === null ? 'user.png' : userImg}
-                alt='User Icon'
+                alt={usernameInput}
                 height={50}
                 />
                 </Link></li>              

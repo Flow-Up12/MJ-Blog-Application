@@ -8,7 +8,7 @@ const Layout = ({ search, setSearch, usernameInput, userImg, editingProfile, set
     return (
         <div className="App">
             {editingProfile === false &&
-                <Nav search={search} setSearch={setSearch} userImg={userImg} setEditingProfile={setEditingProfile}/>
+                <Nav search={search} setSearch={setSearch} userImg={userImg} setEditingProfile={setEditingProfile} usernameInput={usernameInput}/>
             }
             
             <Outlet />

@@ -72,7 +72,7 @@ function App() {
     fetchPosts();
     
   }, []);
-
+ 
   useEffect(() => {
 
     if (isLoggedIn) {
@@ -438,11 +438,11 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile}/>}
+            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile} />}
           >
             <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
             <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} bio={bio} name={name}  setEditingProfile={setEditingProfile}/>} />
-            <Route path="/myPost/editProfile" element={<EditProfile handleUserInfoSubmit={handleUserInfoSubmit} setUserImg={setUserImg} user={user} setBio={setBio} setName={setName} setEditingProfile={setEditingProfile} newUsername={newUsername} setNewUsername={setNewUsername} bio={bio} />} />
+            <Route path="/myPost/editProfile" element={<EditProfile handleUserInfoSubmit={handleUserInfoSubmit} setUserImg={setUserImg} user={user} setBio={setBio} setName={setName} setEditingProfile={setEditingProfile} newUsername={newUsername} setNewUsername={setNewUsername} bio={bio} userImg={userImg}  />} />
             <Route path="post">
               <Route
                 index

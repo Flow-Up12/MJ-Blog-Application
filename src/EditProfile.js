@@ -1,7 +1,7 @@
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-const EditProfile = ({handleUserInfoSubmit ,name , setEditingProfile, newUsername, setNewUsername, bio, setBio,setName}) => {
+const EditProfile = ({userImg, handleUserInfoSubmit ,name , setEditingProfile, newUsername, setNewUsername, bio, setBio,setName}) => {
   
   const handleSaveProfile = (e) => {
     handleUserInfoSubmit(name, newUsername, bio);  
@@ -10,6 +10,10 @@ const EditProfile = ({handleUserInfoSubmit ,name , setEditingProfile, newUsernam
   return (
     <main className="editProfile">
       <div>
+        <Avatar src={userImg} style={{
+          marginBottom:20
+        }}
+        sx={{height:50 , width:50}}></Avatar>
         <TextField
           label="New Username"
           variant="outlined"

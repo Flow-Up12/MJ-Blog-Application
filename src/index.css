@@ -129,12 +129,23 @@ body {
   cursor: pointer;
 }
 
-.Home, .NewPost, .PostPage, .Missing, .editProfile {
+.Home, .NewPost, .PostPage, .Missing {
   width: 100%;
   flex-grow: 1;
   padding: 1rem;
   overflow-y: auto;
   background-color: #fff;
+}
+.editProfile{
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .Settings {
@@ -438,7 +449,6 @@ body {
 }
 .username {
   font-size: 30px;
-  
 }
 
 @media (max-width: 600px) {

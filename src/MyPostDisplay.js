@@ -19,7 +19,7 @@ const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingPr
           <Avatar
             sx={{ width: 70, height: 70 }}
             src={userImg}
-            alt="Profile Img"
+            alt={usernameInput}
             className="MyPostDisplay-header-avatar"
          
           />
@@ -50,7 +50,7 @@ const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingPr
           </div>
         </div>
         <div className="MyPostDisplay-content"> {/* Apply CSS class */}
-          <div className="MyPostDisplay-name">{!name.length ? name2 : name}</div> {/* Apply CSS class */}
+          <div className="MyPostDisplay-name">{!name=== null ? name2 : name}</div> {/* Apply CSS class */}
           <div className="MyPostDisplay-bio">{bio}</div> {/* Apply CSS class */}
         </div>
         <Button
