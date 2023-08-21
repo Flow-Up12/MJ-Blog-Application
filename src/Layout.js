@@ -3,10 +3,14 @@ import Nav from './Nav';
 import Footer from './Footer';
 import { Outlet } from 'react-router-dom';
 
-const Layout = ({ search, setSearch, usernameInput, userImg }) => {
+
+const Layout = ({ search, setSearch, usernameInput, userImg, editingProfile, setEditingProfile }) => {
     return (
         <div className="App">
-            <Nav search={search} setSearch={setSearch} userImg={userImg} />
+            {editingProfile === false &&
+                <Nav search={search} setSearch={setSearch} userImg={userImg} setEditingProfile={setEditingProfile}/>
+            }
+            
             <Outlet />
             <Footer usernameInput={usernameInput} />
         </div>

@@ -8,6 +8,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import MyPostDisplay from './MyPostDisplay';
 import EditPost from './EditPost';
+import EditProfile from './EditProfile';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
@@ -41,8 +42,12 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
   const [userImg, setUserImg] = useState('/user.png');
-  
+  const [name, setName] = useState('');
+  const [bio, setBio] = useState('');
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
 
+  
   
 
 
@@ -55,9 +60,11 @@ function App() {
       const fetchedPosts = [];
       querySnapshot.forEach((doc) => {
         fetchedPosts.push(doc.data());
+
       });
       setPosts(fetchedPosts);
       console.log(fetchedPosts)
+      
       
     
     };
@@ -74,12 +81,13 @@ function App() {
           const querySnapshot = await getDocs(
             query(collection(database, 'usernames'), where('username', '==', usernameInput))
           );
-  
-          if (!querySnapshot.empty) {
+        
+          if (!querySnapshot.empty && !editingProfile) {
             // Since there could be multiple matching documents, let's consider the first one
             const doc = querySnapshot.docs[0];
             const userData = doc.data();
             setUser(userData);
+            localStorage.setItem('userdata', userData);
             if (userData.profileImg != null) {
               setUserImg(userData.profileImg)
               localStorage.setItem('userimg', userData.profileImg);
@@ -87,8 +95,10 @@ function App() {
             else {
               localStorage.setItem('userimg', 'user.png');
             }
-            
+            setBio(userData.bio);
+            setName(userData.name);
             console.log(userData);
+
           }
         } catch (error) {
           console.error('Error fetching user:', error);
@@ -98,7 +108,7 @@ function App() {
       fetchUser();
     }
     
-  }, [usernameInput, isLoggedIn]);
+  }, [usernameInput, isLoggedIn, editingProfile,]);
  
   
   useEffect(()  => {
@@ -112,9 +122,11 @@ function App() {
       if (StoredUserImg != null) {
         setUserImg(StoredUserImg);
       }
-     
-       
-      
+      const StoredUserData = localStorage.getItem('userdata');
+      if (StoredUserData != null) {
+        setUserImg(StoredUserData);
+      }
+
   }
 
 
@@ -174,6 +186,45 @@ function App() {
 
   }
 
+  const handleUserInfoSubmit = async (e) => {
+    try {
+      // Check if the username is already taken
+      const querySnapshot = await getDocs(query(collection(database, 'usernames'), where('username', '==', newUsername)));
+      if (!querySnapshot.empty) {
+        alert("Username Taken");
+      } else {
+        // Update user profile information
+        const querySnapshot = await getDocs(query(collection(database, 'usernames'), where('username', '==', usernameInput)));
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach(async (doc) => {
+            const userRef = doc.ref;
+            // Update the 'profileImg' field in the user document
+            await updateDoc(userRef, { username: newUsername, bio: bio, name: name });
+            setBio(bio);
+            setUsernameInput(newUsername);
+            setName(name);
+  
+            // Update the username in user's posts
+            const updatedMyPosts = myPost.map((post) => {
+              if (post.username === usernameInput) {
+                return { ...post, username: newUsername };
+              }
+              return post;
+            });
+            setMyPost(updatedMyPosts);
+  
+            alert("Profile saved");
+          });
+        }
+        setEditingProfile(false);
+        navigate('/mypost');
+      }
+    } catch (error) {
+      alert("Username taken or invalid input. Please try again.");
+      console.log(error.message);
+    }
+  };
+  
   const handleProfileImgSubmit = async (e) => {
     e.preventDefault();
   
@@ -308,12 +359,12 @@ function App() {
           console.log('User Data:', userData);
           setUsernameInput(userData.username);
           setUser({userData});
+          
         });
       }
       console.log(user);
       setIsLoggedIn(true);
       setPasswordInput('');
-     
       navigate("/");
     } catch (error) {
       alert("Invalid username or password. Please try again.");
@@ -387,11 +438,11 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg}/>}
+            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile}/>}
           >
             <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
-            <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} />} />
-
+            <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} bio={bio} name={name}  setEditingProfile={setEditingProfile}/>} />
+            <Route path="/myPost/editProfile" element={<EditProfile handleUserInfoSubmit={handleUserInfoSubmit} setUserImg={setUserImg} user={user} setBio={setBio} setName={setName} setEditingProfile={setEditingProfile} newUsername={newUsername} setNewUsername={setNewUsername} bio={bio} />} />
             <Route path="post">
               <Route
                 index
