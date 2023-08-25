@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Avatar } from '@mui/material';
+import { Avatar} from '@mui/material';
+
 
 const Nav = ({ search, setSearch, userImg, usernameInput}) => {
 
     
     return (
-        <nav className="Nav">
+        <nav className='top-nav'>
             <form className="searchForm" onSubmit={(e) => e.preventDefault()}>
                 <label htmlFor="search">Search Posts</label>
                 <input
@@ -16,6 +17,7 @@ const Nav = ({ search, setSearch, userImg, usernameInput}) => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </form>
+            
             <ul>
                 <li><Link to="/" >Home</Link></li>
                 <li><Link to="post" >Post</Link></li>

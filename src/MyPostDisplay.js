@@ -49,9 +49,9 @@ const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingPr
             </Button>
           </div>
         </div>
-        <div className="MyPostDisplay-content"> {/* Apply CSS class */}
-          <div className="MyPostDisplay-name">{!name=== null ? name2 : name}</div> {/* Apply CSS class */}
-          <div className="MyPostDisplay-bio">{bio}</div> {/* Apply CSS class */}
+        <div className="MyPostDisplay-content"> 
+          <div className="MyPostDisplay-name">{!name=== null ? name2 : name}</div> 
+          <div className="MyPostDisplay-bio">{bio}</div> 
         </div>
         <Button
            style={{ marginTop: 30, marginBottom: 20, marginRight: 10, backgroundColor: 'lightgray', color:'black', }}

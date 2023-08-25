@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [postTitle, setPostTitle] = useState('');
@@ -56,14 +57,24 @@ function App() {
     const fetchPosts = async () => {
       const postCollection = collection(database, 'posts');
       const querySnapshot = await getDocs(postCollection);
+      const userCollection = collection(database, 'usernames');
+      const userQuerySnapshot = await getDocs(userCollection);
       
       const fetchedPosts = [];
+      const fetchedUsers = [];
       querySnapshot.forEach((doc) => {
         fetchedPosts.push(doc.data());
 
       });
+      userQuerySnapshot.forEach((doc) => {
+        fetchedUsers.push(doc.data().username);
+
+      });
       setPosts(fetchedPosts);
-      console.log(fetchedPosts)
+      setUsers(fetchedUsers);
+      console.log(fetchedPosts);
+      console.log(fetchedUsers);
+      
       
       
     
@@ -161,14 +172,14 @@ function App() {
 
     setSearchResults(filteredResults.reverse());
     setMyPost(userFilteredResults);
-  }, [posts, search, usernameInput])
+  }, [posts, search, usernameInput, users])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     
     const id = uuidv4();
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
-    const newPost = { id, username: usernameInput, title: postTitle, datetime, body: postBody, imageUrl: selectedImage  };
+    const newPost = { id, username: usernameInput, title: postTitle, datetime, body: postBody, imageUrl: selectedImage, profileImg: userImg};
     try {
       const postCollection = collection(database, 'posts');
       await addDoc(postCollection, newPost);
@@ -438,7 +449,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile} />}
+            element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile} posts={posts} />}
           >
             <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
             <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} bio={bio} name={name}  setEditingProfile={setEditingProfile}/>} />
