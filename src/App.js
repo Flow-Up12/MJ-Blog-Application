@@ -9,6 +9,7 @@ import SignUp from './SignUp';
 import MyPostDisplay from './MyPostDisplay';
 import EditPost from './EditPost';
 import EditProfile from './EditProfile';
+import Profile from './Profile'
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
@@ -47,6 +48,7 @@ function App() {
   const [bio, setBio] = useState('');
   const [editingProfile, setEditingProfile] = useState(false);
   const [newUsername, setNewUsername] = useState('');
+  const [profile, setProfile] = useState('');
 
   
   
@@ -169,6 +171,7 @@ function App() {
       const userFilteredResults = filteredResults.filter(
         (post) => post.username === usernameInput
       );
+      
 
     setSearchResults(filteredResults.reverse());
     setMyPost(userFilteredResults);
@@ -451,8 +454,9 @@ function App() {
             path="/"
             element={<Layout search={search} setSearch={setSearch} usernameInput={usernameInput} userImg={userImg} editingProfile={editingProfile} setEditingProfile={setEditingProfile} posts={posts} />}
           >
-            <Route index element={<Home posts={searchResults} usernameInput={usernameInput} />} />
-            <Route path="myPost" element={<MyPostDisplay posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} bio={bio} name={name}  setEditingProfile={setEditingProfile}/>} />
+            <Route index element={<Home posts={searchResults} usernameInput={usernameInput} setProfile={setProfile} />} />
+            <Route path="/profile/:username" element={<Profile profile={profile} setProfile={setProfile} usernameInput={usernameInput} posts={posts} userImg={userImg} bio={bio} name={name} setEditingProfile={setEditingProfile} />} />
+            <Route path="myPost" element={<MyPostDisplay setProfile={setProfile} posts={searchResults} usernameInput={usernameInput} myPost={myPost} userImg={userImg} bio={bio} name={name}  setEditingProfile={setEditingProfile}/>} />
             <Route path="/myPost/editProfile" element={<EditProfile handleUserInfoSubmit={handleUserInfoSubmit} setUserImg={setUserImg} user={user} setBio={setBio} setName={setName} setEditingProfile={setEditingProfile} newUsername={newUsername} setNewUsername={setNewUsername} bio={bio} userImg={userImg}  />} />
             <Route path="post">
               <Route
@@ -487,6 +491,7 @@ function App() {
                 path=":id"
                 element={<PostPage usernameInput={usernameInput} posts={posts} handleDelete={handleDelete} />}
               />
+              
             </Route>
 
             <Route path="settings" element={<Settings handleSignOut={handleSignOut} handleUserImg={handleUserImg} handleProfileImgSubmit={handleProfileImgSubmit}/>} />

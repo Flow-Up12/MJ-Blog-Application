@@ -1,6 +1,6 @@
 import Post from './Post';
 
-const MyPost = ({ myPost }) => {
+const MyPost = ({ myPost, setProfile}) => {
   // Sort the posts by the datetime property in ascending order
   const sortedPosts = myPost.slice().sort((b,a) => {
     const dateA = new Date(a.datetime);
@@ -11,7 +11,7 @@ const MyPost = ({ myPost }) => {
   return (
     <>
       {sortedPosts.map((post) => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post} setProfile={setProfile} />
       ))}
     </>
   );

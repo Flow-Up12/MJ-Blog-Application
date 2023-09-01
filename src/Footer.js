@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Fullscreen, FullscreenExit } from '@mui/icons-material';
 
 const Footer = ({ usernameInput }) => {
     const today = new Date();
     const [isFullscreen, setIsFullscreen] = useState(false);
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+    
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+    
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     const toggleFullscreen = () => {
         if (!document.fullscreenElement) {
@@ -13,9 +24,10 @@ const Footer = ({ usernameInput }) => {
                 docEl.mozRequestFullScreen ||
                 docEl.webkitRequestFullscreen ||
                 docEl.msRequestFullscreen;
-    
+
             if (requestFullScreen) {
                 requestFullScreen.call(docEl);
+                setIsFullscreen(true);
             }
         } else {
             const exitFullScreen =
@@ -23,12 +35,12 @@ const Footer = ({ usernameInput }) => {
                 document.mozCancelFullScreen ||
                 document.webkitExitFullscreen ||
                 document.msExitFullscreen;
-    
+
             if (exitFullScreen) {
                 exitFullScreen.call(document);
+                setIsFullscreen(false);
             }
         }
-        setIsFullscreen(!isFullscreen);
     };
 
     return (

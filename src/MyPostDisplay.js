@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import MyPostFeed from './MyPostFeed';
 
 
-const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingProfile }) => {
+const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingProfile , setProfile}) => {
   const [activeTab, setActiveTab] = useState('post'); // Default active tab is "post"
   const name2 = usernameInput;
   const handleTabChange = (tab) => {
@@ -63,7 +63,7 @@ const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingPr
       </div>
 
       {activeTab === 'post' ? (
-        myPost.length ? <MyPostFeed myPost={myPost} /> : <p style={{ marginTop: '2rem' }}>No posts to display.</p>
+        myPost.length ? <MyPostFeed setProfile={setProfile} myPost={myPost} /> : <p style={{ marginTop: '2rem' }}>No posts to display.</p>
       ) : (
         <p>Content for {activeTab} tab goes here.</p>
       )}
