@@ -55,7 +55,7 @@ const EditProfile = ({usernameInput, userImg, handleUserInfoSubmit ,name , setEd
           Save Profile
         </Button>
         <Button variant="contained" color="primary" onClick={ () => setEditingProfile(false) } >
-          <Link to="/mypost"style={{textDecoration:'none', color: "white"}}>Cancel</Link>
+          <Link to="/myProfile"style={{textDecoration:'none', color: "white"}}>Cancel</Link>
         </Button>
       </div>
     </main>
