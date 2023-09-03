@@ -29,7 +29,7 @@ const NewPost = ({
                     accept="image/*"
                     onChange={handleImageChange}
                 />
-               {selectedImage && <img src={selectedImage} alt="Selected" />}
+               {selectedImage && <img src={selectedImage} alt="Selected" height="200px" width="200px" />}
                 <button type="submit">Submit</button>
             </form>
         </main>

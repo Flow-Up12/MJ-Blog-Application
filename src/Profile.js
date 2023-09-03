@@ -5,13 +5,11 @@ import { getDocs, collection, query, where} from 'firebase/firestore';
 import { database } from './data/FireBase';
 
 
-
 const MyPostDisplay = ({ posts, usernameInput, userImg, bio, profile, setProfile}) => {
   const [activeTab, setActiveTab] = useState('post'); // Default active tab is "post"
-  const name2 = usernameInput;
   const [name, setName] = useState('No name');
   const [username, setUsername] = useState('');
-  const [profileImg, setProfileImg] = useState('user.png');
+  const [profileImg, setProfileImg] = useState('');
   const [profileBio, setProfileBio] = useState('No Bio');
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -26,7 +24,9 @@ const MyPostDisplay = ({ posts, usernameInput, userImg, bio, profile, setProfile
           const userProfile = doc.data();
           console.log('User Data:', userProfile);
           setName(userProfile.name);
-          setProfileImg(userProfile.profile)
+          console.log(userProfile.name)
+          setProfileImg(userProfile.profileImg)
+          console.log(profileImg)
           setUsername(userProfile.username)
           console.log(userProfile.username)
           setProfileBio(userProfile.bio)
@@ -35,8 +35,10 @@ const MyPostDisplay = ({ posts, usernameInput, userImg, bio, profile, setProfile
         
       
     }
+   
     fetchProfileData();
-  }, [profile, setProfile, posts])
+      // eslint-disable-next-line
+  }, [])
 
  
   return (
@@ -47,7 +49,7 @@ const MyPostDisplay = ({ posts, usernameInput, userImg, bio, profile, setProfile
           <Avatar
             sx={{ width: 70, height: 70 }}
             src={profileImg}
-            alt={name}
+            alt={username}
             className="MyPostDisplay-header-avatar"
          
           />
@@ -78,8 +80,8 @@ const MyPostDisplay = ({ posts, usernameInput, userImg, bio, profile, setProfile
           </div>
         </div>
         <div className="MyPostDisplay-content"> 
-          <div className="MyPostDisplay-name">{!name=== null ? name2 : name}</div> 
-          <div className="MyPostDisplay-bio">{profileBio}</div> 
+          <div className="MyPostDisplay-name">{name === undefined ? username : name}</div> 
+          <div className="MyPostDisplay-bio">{profileBio === undefined ? "no bio" : profileBio}</div> 
         </div>
        
       </div>

@@ -60,6 +60,11 @@ const MyPostDisplay = ({ myPost, usernameInput, userImg, name, bio, setEditingPr
             Edit Profile
           </Link>
         </Button>
+        <Button
+           style={{ marginTop: 30, marginBottom: 20, marginRight: 10, backgroundColor: 'lightgray', color:'black', }}
+        >
+          <Link to="settings"  style={{ color: 'black', textDecoration: 'none' }}>Settings</Link>
+        </Button>
       </div>
 
       {activeTab === 'post' ? (

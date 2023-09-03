@@ -1,7 +1,8 @@
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 
-function SignIn({ handleSignIn, emailInput, setEmailInput, passwordInput, setPasswordInput, setIsSigningUp}) {
+function SignIn({ handlePasswordReset, handleSignIn, emailInput, setEmailInput, passwordInput, setPasswordInput, setIsSigningUp}) {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSignIn(emailInput, passwordInput);
@@ -31,8 +32,11 @@ function SignIn({ handleSignIn, emailInput, setEmailInput, passwordInput, setPas
       <Link to="/signup" onClick={() => setIsSigningUp(true)}>
   Create an account
       </Link>
+     
+      <Button style={{height:30, fontSize:12}} onClick={() => handlePasswordReset(emailInput)}>Forgot Password</Button>
 
     </div>
+    
   );
 }
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Avatar} from '@mui/material';
-
+import SearchIcon from '@mui/icons-material/Search';
 
 const Nav = ({ search, setSearch, userImg, usernameInput}) => {
 
@@ -21,8 +21,11 @@ const Nav = ({ search, setSearch, userImg, usernameInput}) => {
             <ul>
                 <li><Link to="/" >Home</Link></li>
                 <li><Link to="post" >Post</Link></li>
-                <li><Link to="settings"  >Settings</Link></li> 
-                <li><Link to="myPost"> 
+                <li><Link to="search" >
+                 <SearchIcon>
+
+                </SearchIcon></Link></li>
+              <li><Link to="myProfile"> 
                 <Avatar
                 src={userImg === null ? 'user.png' : userImg}
                 alt={usernameInput}

@@ -19,7 +19,7 @@ const Post = ({ post, usernameInput, setProfile }) => {
           >
             <Avatar
               style={{ marginRight: 10 }}
-              src={post.profileImg === undefined ? 'user.png' : post.profileImg}
+              src={post.profileImg}
               alt={post.username}
             />
           </Link>

@@ -1,11 +1,22 @@
 import { TextField, Button, Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const EditProfile = ({userImg, handleUserInfoSubmit ,name , setEditingProfile, newUsername, setNewUsername, bio, setBio,setName}) => {
+const EditProfile = ({usernameInput, userImg, handleUserInfoSubmit ,name , setEditingProfile, newUsername, setNewUsername, bio, setBio,setName}) => {
   
   const handleSaveProfile = (e) => {
     handleUserInfoSubmit(name, newUsername, bio);  
   };
+  
+  useEffect(() => {
+    const setInfo = async  () => {   
+       setNewUsername(usernameInput);    
+       setName(name);
+      }
+
+    setInfo();
+      // eslint-disable-next-line
+  }, [])
 
   return (
     <main className="editProfile">
